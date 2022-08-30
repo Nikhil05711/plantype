@@ -1,0 +1,35 @@
+.cus-img img {
+  width: 100px;
+}
+.cus-img {
+  list-style-type: none;
+  margin: auto;
+  padding: 10px;
+  text-align: center;
+  background: #f1ecec;
+  border-radius: 7px;
+  margin: 10px;
+}
+
+.cus-img img {
+  width: 50%;
+}
+.cus-ul {
+  display: inline-flex;
+}
+.arrow {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  height: 7px;
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(1, 12, 58);
+}
