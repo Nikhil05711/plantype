@@ -131,6 +131,72 @@ app.get("/getSpkey", Auth, async function (Request, Response) {
 
 ///////////////*******Session end of spkey*************/////////////////
 
+////////////**********Session begin of circle id**************////////////////
+
+const circleID = async (Request, Response) => {
+  try {
+    const res = await axios.get(
+      "https://roundpay.net/PlanServices/v1/GetCircleCodes",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Request.session.token}`,
+        },
+      }
+    );
+    if (!res) {
+      Response.status(400).json({
+        message: "Failed to get Details",
+        flag: false,
+      });
+    }
+    Request.session.circleID = res.data;
+    // Response.status(200).json(res.data);
+  } catch (error) {
+    return Response.status(400).json({
+      message: error.message.toString(),
+      flag: false,
+    });
+  }
+};
+
+const day = 1000 * 60 * 60 * 24;
+
+app.use(
+  sessions({
+    secret: "Roundpay_Lucknow",
+    saveUninitialized: true,
+    cookie: { maxAge: day },
+    resave: false,
+  })
+);
+
+app.use(
+  sessions({
+    secret: "Roundpay_Lucknow",
+    saveUninitialized: true,
+    cookie: { maxAge: day },
+    resave: false,
+  })
+);
+
+app.use(cookieParser());
+
+app.get("/getCircleCode", Auth, async function (Request, Response) {
+  var response = {};
+  // console.log(Request.session);
+  if (!Request.session.circleID) {
+    console.log("session set successfully");
+    response = await circleID(Request, Response);
+  }
+  response = Request.session.circleID.data;
+  // response = await circleID(Request, Response);
+  Response.send(response);
+  // Response.status(200).json(response);
+});
+
+////////////**********Session end of circle id**************////////////////
+
 app.get("/Prepaid", function (Request, Response) {
   console.log(Request?.session?.token ?? "no value");
   Response.sendFile(`${__dirname}/index.html`);

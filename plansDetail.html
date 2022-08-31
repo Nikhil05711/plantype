@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css
 " />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" /> -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
     <link rel="stylesheet" href="css/stylesheet.css" />
@@ -156,6 +156,24 @@
                 </div>
             </div>
         </footer>
+        <script>
+            var loadCircle = function () {
+                var url = 'http://localhost:4000/getCircleCode';
+                // Making our request 
+                fetch(url, { method: 'GET' })
+                    .then(Result => Result.json())
+                    .then(string => {
+                        console.log('123')
+                        // Printing our response 
+                        console.log(string);
+
+                        // Printing our field of our response
+                        console.log(`Title of our response :  ${string.title}`);
+                    })
+                    .catch(errorMsg => { console.log(errorMsg); });
+            }
+            loadCircle();
+        </script>
 </body>
 
 </html>
