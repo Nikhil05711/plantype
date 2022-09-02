@@ -33,3 +33,12 @@
 ::-webkit-scrollbar-thumb {
   background-color: rgb(1, 12, 58);
 }
+
+.custom-table {
+  background: #fff;
+  padding: 27px;
+  margin: 23px;
+  border-radius: 10px;
+  width: 817px;
+  margin: auto;
+}

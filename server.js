@@ -133,30 +133,23 @@ app.get("/getSpkey", Auth, async function (Request, Response) {
 
 ////////////**********Session begin of circle id**************////////////////
 
-const circleID = async (Request, Response) => {
+const circleID = async (token) => {
   try {
     const res = await axios.get(
       "https://roundpay.net/PlanServices/v1/GetCircleCodes",
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${Request.session.token}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
-    if (!res) {
-      Response.status(400).json({
-        message: "Failed to get Details",
-        flag: false,
-      });
-    }
-    Request.session.circleID = res.data;
-    // Response.status(200).json(res.data);
+    return res.data;
   } catch (error) {
-    return Response.status(400).json({
-      message: error.message.toString(),
-      flag: false,
-    });
+    // return Response.status(400).json({
+    //   message: error.message.toString(),
+    //   flag: false,
+    // });
   }
 };
 
@@ -183,16 +176,17 @@ app.use(
 app.use(cookieParser());
 
 app.get("/getCircleCode", Auth, async function (Request, Response) {
-  var response = {};
+  // var response = {};
   // console.log(Request.session);
-  if (!Request.session.circleID) {
-    console.log("session set successfully");
-    response = await circleID(Request, Response);
-  }
-  response = Request.session.circleID.data;
-  // response = await circleID(Request, Response);
-  Response.send(response);
-  // Response.status(200).json(response);
+  // if (!Request.session.circleID) {
+  //   console.log("session set successfully");
+  //   response = await circleID(Request, Response);
+  // }
+  // response = Request.session.circleID.data;
+  var response = await circleID(Request.session.token);
+  console.log("hit", response);
+  //Response.end(JSON.stringify(response));
+  Response.status(200).json(response);
 });
 
 ////////////**********Session end of circle id**************////////////////

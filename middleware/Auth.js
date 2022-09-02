@@ -8,7 +8,6 @@ const Auth = async function (req, res, next) {
     console.log("LOGIN RESP", login);
     if (login.flag) {
       req.session.token = login.message;
-      next();
     } else {
       return res.status(400).json({
         message: login.message,
@@ -16,5 +15,6 @@ const Auth = async function (req, res, next) {
       });
     }
   }
+  next();
 };
 module.exports = Auth;
