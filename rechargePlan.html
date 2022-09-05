@@ -89,10 +89,7 @@
             <div class="hero-mask opacity-3 bg-dark"></div>
             <div class="hero-bg" style="background-image:url('./images/bg/image-1.jpg');"></div>
             <div class="hero-content py-3 py-lg-5  my-3 my-md-5">
-                <div class="container p-4" style="background-color: rgba(0,0,0,0.5)">
-                    <div class="row" id="circleGrid">
-                    </div>
-                </div>
+
             </div>
         </div>
         <footer id="footer">
@@ -163,33 +160,7 @@
                 </div>
             </div>
         </footer>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script>
-            var loadCircle = function () {
-                $.get('/getCircleCode')
-                    .done(result => {
-                        let qs = getQueryString();
-                        for (let i = 0; i < result.data.length; i = i + 3) {
-                            $('#circleGrid').append(`<div class="col-sm btn btn-success m-1 text-nowrap"><a href="/rechargePlan?o=${qs?.s}&cc=${result.data[i].circleCode}">${result.data[i].circleName}</a></div>
-                            <div class="col-sm btn btn-info m-1 text-nowrap"><a href="/rechargePlan?o=${qs?.s}&cc=${result.data[i + 1].circleCode}">${result.data[i + 1].circleName}</a></div>
-                            <div class="col-sm btn btn-warning m-1 text-nowrap"><a href="/rechargePlan?o=${qs?.s}&cc=${result.data[i + 2].circleCode}">${result.data[i + 2].circleName}</a></div>`);
-                        }
-                    })
-                    .fail(xhr => console.log(xhr.responseText));
-            }
-            loadCircle();
-            getQueryString = () => {
-                let queries = {};
-                let url = document.location.search;
-                if (url.trim() !== '') {
-                    $.each(document.location.search.substr(1).split('&'), function (c, q) {
-                        let i = q.split('=');
-                        queries[i[0]] = i[1];
-                    });
-                }
-                return queries;
-            };
-        </script>
+
 </body>
 
 </html>

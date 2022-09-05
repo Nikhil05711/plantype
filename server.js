@@ -1,7 +1,6 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const sessions = require("express-session");
-const http = require("http");
 const app = express();
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -9,10 +8,9 @@ const axios = require("axios").default;
 const path = require("path");
 const dotenv = require("dotenv");
 const Auth = require("./middleware/Auth");
-const { response } = require("express");
-const { ok } = require("assert");
-// const url = require("./enum");
 dotenv.config();
+const { getSPKey, circleID } = require("./service");
+const router = require("./app");
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json({ limit: "50mb" }));
@@ -65,32 +63,6 @@ app.get("/gettoken", Auth, function (Request, Response) {
 
 ///////////////*******Session create of spkey*************/////////////////
 
-const getSPKey = async (Request, Response) => {
-  try {
-    const mySpkey = await axios.get(
-      "https://roundpay.net/PlanServices/v1/GetOperatorCodes",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Request.session.token}`,
-        },
-      }
-    );
-    if (!mySpkey) {
-      Response.status(400).json({
-        message: "Failed to get Details",
-        flag: false,
-      });
-    }
-    Request.session.spkey = mySpkey.data;
-  } catch (error) {
-    return Response.status(400).json({
-      message: error.message.toString(),
-      flag: false,
-    });
-  }
-};
-
 const Day = 1000 * 60 * 60 * 24;
 
 app.use(
@@ -125,33 +97,9 @@ app.get("/getSpkey", Auth, async function (Request, Response) {
   Response.send(response);
 });
 
-// app.get("/getSpkeys", Auth, function (req, res) {
-//   res.send(res.session.spkey);
-// });
+///****Session end of spkey****//////
 
-///////////////*******Session end of spkey*************/////////////////
-
-////////////**********Session begin of circle id**************////////////////
-
-const circleID = async (token) => {
-  try {
-    const res = await axios.get(
-      "https://roundpay.net/PlanServices/v1/GetCircleCodes",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return res.data;
-  } catch (error) {
-    // return Response.status(400).json({
-    //   message: error.message.toString(),
-    //   flag: false,
-    // });
-  }
-};
+///*****Session begin of circle id*****///////
 
 const day = 1000 * 60 * 60 * 24;
 
@@ -176,49 +124,14 @@ app.use(
 app.use(cookieParser());
 
 app.get("/getCircleCode", Auth, async function (Request, Response) {
-  // var response = {};
-  // console.log(Request.session);
-  // if (!Request.session.circleID) {
-  //   console.log("session set successfully");
-  //   response = await circleID(Request, Response);
-  // }
-  // response = Request.session.circleID.data;
   var response = await circleID(Request.session.token);
   console.log("hit", response);
-  //Response.end(JSON.stringify(response));
   Response.status(200).json(response);
 });
 
 ////////////**********Session end of circle id**************////////////////
 
-app.get("/Prepaid", function (Request, Response) {
-  console.log(Request?.session?.token ?? "no value");
-  Response.sendFile(`${__dirname}/index.html`);
-});
-
-app.get("/DTH", function (Request, Response) {
-  Response.sendFile(`${__dirname}/DTH.html`);
-});
-
-app.get("/MobileLookup", function (Request, Response) {
-  Response.sendFile(`${__dirname}/MobileLookup.html`);
-});
-
-app.get("/", function (Request, Response) {
-  Response.sendFile(`${__dirname}/DefaultPage.html`);
-});
-
-app.get("/Postpaid", function (Request, Response) {
-  Response.sendFile(`${__dirname}/Postpaid.html`);
-});
-
-app.get("/States", function (Request, Response) {
-  Response.sendFile(`${__dirname}/States.html`);
-});
-
-app.get("/plansDetail", function (Request, Response) {
-  Response.sendFile(`${__dirname}/plansDetail.html`);
-});
+app.use(router);
 
 app.post("/GetToken", async function (Request, Response) {
   try {
@@ -254,5 +167,3 @@ mongoose
 //Assign a port manually
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
-
-// planservices
