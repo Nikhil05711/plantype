@@ -8,6 +8,7 @@ const dotenv = require("dotenv");
 const Auth = require("./middleware/Auth");
 dotenv.config();
 const { rechargePlan } = require("./service");
+const async = require("hbs/lib/async");
 
 ////******Session of create token begin*******/
 
@@ -144,8 +145,12 @@ router.get("/plansDetail", function (Request, Response) {
   Response.sendFile(`${__dirname}/plansDetail.html`);
 });
 
-router.get("/rechargePlan", Auth, async function (Request, Response) {
+router.get("/rechargePlan", async function (Request, Response) {
   Response.sendFile(`${__dirname}/rechargePlan.html`);
+});
+
+router.post("/rechargePlan", Auth, async function (Request, Response) {
+  console.log(Request);
   var response = await rechargePlan(
     Request.query.o,
     Request.query.cc,
